@@ -1,199 +1,184 @@
 
 $(function() {
-    "use strict";
-    // ============================================================== 
-    // Guage 1
-    // ============================================================== 
-    var opts = {
-        angle: 0, // The span of the gauge arc
-        lineWidth: 0.32, // The line thickness
-        radiusScale: 1, // Relative radius
-        pointer: {
-            length: 0.6, // // Relative to gauge radius
-            strokeWidth: 0.088, // The thickness
-            color: '#2e2f39' // Fill color
+    am4core.ready(function() {
+
+    var chartMin = 0;
+    var chartMax = 5;
+
+    var data = {
+      score: JS_VAR_DATA,
+      gradingData: [
+        {
+          title: "완전매도",
+          color: "#fdae19",
+          lowScore: 0,
+          highScore: 1
         },
-        limitMax: false, // If false, max value increases automatically if value > maxValue
-        limitMin: false, // If true, the min value of the gauge will be fixed
-        colorStart: '#e4e4ee', // Colors
-        colorStop: '#5969ff', // just experiment with them
-        strokeColor: '#e4e4ee', // to see which ones work best for you
-        generateGradient: true,
-        highDpiSupport: true, // High resolution support
-
-    };
-    var target = document.getElementById('gauge1'); // your canvas element
-    var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-    gauge.maxValue = 3000; // set max gauge value
-    gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
-    gauge.animationSpeed = 76; // set animation speed (32 is default value)
-    gauge.set(1850); // set actual value
-
-
-// ============================================================== 
-    // Guage 2
-    // ============================================================== 
-
-
-var opts = {
-        angle: 0.35, // The span of the gauge arc
-        lineWidth: 0.1, // The line thickness
-        radiusScale: 1, // Relative radius
-        pointer: {
-            length: 0.6, // // Relative to gauge radius
-            strokeWidth: 0.115, // The thickness
-            color: '#2e2f39' // Fill color
+        {
+          title: "매도",
+          color: "#f3eb0c",
+          lowScore: 1,
+          highScore: 2
         },
-        limitMax: false, // If false, max value increases automatically if value > maxValue
-        limitMin: false, // If true, the min value of the gauge will be fixed
-        colorStart: '#ff407b', // Colors
-        colorStop: '#ff407b', // just experiment with them
-        strokeColor: '#e4e4ee', // to see which ones work best for you
-        generateGradient: true,
-        highDpiSupport: true, // High resolution support
-        // renderTicks is Optional
-        renderTicks: {
-            divisions: 5,
-            divWidth: 1.1,
-            divLength: 0.7,
-            divColor: '#333333',
-            subDivisions: 3,
-            subLength: 0.5,
-            subWidth: 0.6,
-            subColor: '#666666'
+        {
+          title: "중립",
+          color: "#b0d136",
+          lowScore: 2,
+          highScore: 3
+        },
+        {
+          title: "매수",
+          color: "#54b947",
+          lowScore: 3,
+          highScore: 4
+        },
+        {
+          title: "완전매수",
+          color: "#0f9747",
+          lowScore: 4,
+          highScore: 5
         }
-
-    }; 
-    var target = document.getElementById('gauge2'); // your canvas element
-    var gauge = new Donut(target).setOptions(opts); // create sexy gauge!
-    gauge.maxValue = 3000; // set max gauge value
-    gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
-    gauge.animationSpeed = 32; // set animation speed (32 is default value)
-    gauge.set(1675); // set actual value
-
-
-
-// ============================================================== 
-    // Guage 3
-    // ============================================================== 
-
-
- var opts = {
-        angle: -0.18, // The span of the gauge arc
-        lineWidth: 0.2, // The line thickness
-        radiusScale: 1, // Relative radius
-        pointer: {
-            length: 0.6, // // Relative to gauge radius
-            strokeWidth: 0.035, // The thickness
-            color: '#2e2f39' // Fill color
-        },
-        limitMax: false, // If false, max value increases automatically if value > maxValue
-        limitMin: false, // If true, the min value of the gauge will be fixed
-        colorStart: '#5969ff', // Colors
-        colorStop: '#8FC0DA', // just experiment with them
-        strokeColor: '#E0E0E0', // to see which ones work best for you
-        generateGradient: true,
-        highDpiSupport: true, // High resolution support
-        // renderTicks is Optional
-        renderTicks: {
-            divisions: 5,
-            divWidth: 1.1,
-            divLength: 0.7,
-            divColor: '#333333',
-            subDivisions: 3,
-            subLength: 0.5,
-            subWidth: 0.6,
-            subColor: '#666666'
-        },
-        staticZones: [
-            { strokeStyle: "rgb(255,0,0)", min: 0, max: 500, height: 1.4 },
-            { strokeStyle: "rgb(200,100,0)", min: 500, max: 1000, height: 1.4 },
-            { strokeStyle: "rgb(150,150,0)", min: 1000, max: 1500, height: 1.4 },
-            { strokeStyle: "rgb(100,200,0)", min: 1500, max: 2000, height: 1.4 },
-            { strokeStyle: "rgb(0,255,0)", min: 2000, max: 3100, height: 1.4 }
-        ],
-
+      ]
     };
-    var target = document.getElementById('gauge3'); // your canvas element
-    var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-    gauge.maxValue = 3000; // set max gauge value
-    gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
-    gauge.animationSpeed = 32; // set animation speed (32 is default value)
-    gauge.set(1250); // set actual value
+
+    /**
+    Grading Lookup
+     */
+    function lookUpGrade(lookupScore, grades) {
+      // Only change code below this line
+      for (var i = 0; i < grades.length; i++) {
+        if (
+          grades[i].lowScore < lookupScore &&
+          grades[i].highScore >= lookupScore
+        ) {
+          return grades[i];
+        }
+      }
+      return null;
+    }
+
+    // create chart
+    var chart = am4core.create("chartdiv", am4charts.GaugeChart);
+    chart.hiddenState.properties.opacity = 0;
+    chart.fontSize = 11;
+    chart.innerRadius = am4core.percent(80);
+    chart.resizable = true;
+
+    /**
+     * Normal axis
+     */
+
+    var axis = chart.xAxes.push(new am4charts.ValueAxis());
+    axis.min = chartMin;
+    axis.max = chartMax;
+    axis.strictMinMax = true;
+    axis.renderer.radius = am4core.percent(80);
+    axis.renderer.inside = true;
+    axis.renderer.line.strokeOpacity = 0.1;
+    axis.renderer.ticks.template.disabled = false;
+    axis.renderer.ticks.template.strokeOpacity = 1;
+    axis.renderer.ticks.template.strokeWidth = 0.5;
+    axis.renderer.ticks.template.length = 5;
+    axis.renderer.grid.template.disabled = true;
+    axis.renderer.labels.template.radius = am4core.percent(15);
+    axis.renderer.labels.template.fontSize = "0.9em";
+
+    /**
+     * Axis for ranges
+     */
+
+    var axis2 = chart.xAxes.push(new am4charts.ValueAxis());
+    axis2.min = chartMin;
+    axis2.max = chartMax;
+    axis2.strictMinMax = true;
+    axis2.renderer.labels.template.disabled = true;
+    axis2.renderer.ticks.template.disabled = true;
+    axis2.renderer.grid.template.disabled = false;
+    axis2.renderer.grid.template.opacity = 0.5;
+    axis2.renderer.labels.template.bent = true;
+    axis2.renderer.labels.template.fill = am4core.color("#000");
+    axis2.renderer.labels.template.fontWeight = "bold";
+    axis2.renderer.labels.template.fillOpacity = 0.3;
 
 
 
+    /**
+    Ranges
+    */
+
+    for (let grading of data.gradingData) {
+      var range = axis2.axisRanges.create();
+      range.axisFill.fill = am4core.color(grading.color);
+      range.axisFill.fillOpacity = 0.8;
+      range.axisFill.zIndex = -1;
+      range.value = grading.lowScore > chartMin ? grading.lowScore : chartMin;
+      range.endValue = grading.highScore < chartMax ? grading.highScore : chartMax;
+      range.grid.strokeOpacity = 0;
+      range.stroke = am4core.color(grading.color).lighten(-0.1);
+      range.label.inside = true;
+      range.label.text = grading.title.toUpperCase();
+      range.label.inside = true;
+      range.label.location = 0.5;
+      range.label.inside = true;
+      range.label.radius = am4core.percent(10);
+      range.label.paddingBottom = -5; // ~half font size
+      range.label.fontSize = "0.9em";
+    }
+
+    var matchingGrade = lookUpGrade(data.score, data.gradingData);
+
+    /**
+     * Label 1
+     */
+
+    var label = chart.radarContainer.createChild(am4core.Label);
+    label.isMeasured = false;
+    label.fontSize = "6em";
+    label.x = am4core.percent(50);
+    label.paddingBottom = 15;
+    label.horizontalCenter = "middle";
+    label.verticalCenter = "bottom";
+    //label.dataItem = data;
+    label.text = data.score.toFixed(1);
+    //label.text = "{score}";
+    label.fill = am4core.color(matchingGrade.color);
+
+    /**
+     * Label 2
+     */
+
+    var label2 = chart.radarContainer.createChild(am4core.Label);
+    label2.isMeasured = false;
+    label2.fontSize = "2em";
+    label2.horizontalCenter = "middle";
+    label2.verticalCenter = "bottom";
+    label2.text = matchingGrade.title.toUpperCase();
+    label2.fill = am4core.color(matchingGrade.color);
 
 
+    /**
+     * Hand
+     */
 
+    var hand = chart.hands.push(new am4charts.ClockHand());
+    hand.axis = axis2;
+    hand.innerRadius = am4core.percent(55);
+    hand.startWidth = 8;
+    hand.pin.disabled = true;
+    hand.value = data.score;
+    hand.fill = am4core.color("#444");
+    hand.stroke = am4core.color("#000");
 
-
-
-  // ============================================================== 
-    // Guage 4
-    // ============================================================== 
-
-
-
-
-var opts = {
-        angle: 0.1, // The span of the gauge arc
-        lineWidth: 0.3, // The line thickness
-        radiusScale: 1, // Relative radius
-        pointer: {
-            length: 0.6, // // Relative to gauge radius
-            strokeWidth: 0.088, // The thickness
-            color: '#000000' // Fill color
-        },
-        limitMax: false, // If false, max value increases automatically if value > maxValue
-        limitMin: false, // If true, the min value of the gauge will be fixed
-        colorStart: '#6FADCF', // Colors
-        colorStop: '#8FC0DA', // just experiment with them
-        strokeColor: '#E0E0E0', // to see which ones work best for you
-        generateGradient: true,
-        highDpiSupport: true, // High resolution support
-        // renderTicks is Optional
-        renderTicks: {
-            divisions: 5,
-            divWidth: 1.1,
-            divLength: 0.7,
-            divColor: '#333333',
-            subDivisions: 3,
-            subLength: 0.5,
-            subWidth: 0.6,
-            subColor: '#666666'
-        },
-        staticZones: [
-            { strokeStyle: "rgb(255,0,0)", min: 0, max: 500, height: 1.4 },
-            { strokeStyle: "rgb(200,100,0)", min: 500, max: 1000, height: 1.2 },
-            { strokeStyle: "rgb(150,150,0)", min: 1000, max: 1500, height: 1 },
-            { strokeStyle: "rgb(100,200,0)", min: 1500, max: 2000, height: 0.8 },
-            { strokeStyle: "rgb(0,255,0)", min: 2000, max: 3100, height: 0.6 }
-        ],
-
-    };
-    var target = document.getElementById('gauge4'); // your canvas element
-    var gauge = new Gauge(target).setOptions(opts); // create sexy gauge!
-    gauge.maxValue = 3000; // set max gauge value
-    gauge.setMinValue(0); // Prefer setter over gauge.minValue = 0
-    gauge.animationSpeed = 76; // set animation speed (32 is default value)
-    gauge.set(1600); // set actual value
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    hand.events.on("positionchanged", function(){
+      label.text = axis2.positionToValue(hand.currentPosition).toFixed(1);
+      var value2 = axis.positionToValue(hand.currentPosition);
+      var matchingGrade = lookUpGrade(axis.positionToValue(hand.currentPosition), data.gradingData);
+      label2.text = matchingGrade.title.toUpperCase();
+      label2.fill = am4core.color(matchingGrade.color);
+      label2.stroke = am4core.color(matchingGrade.color);
+      label.fill = am4core.color(matchingGrade.color);
+    })
+    }); // end am4core.ready()
     });
-
 
 

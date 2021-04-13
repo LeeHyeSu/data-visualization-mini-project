@@ -1,84 +1,30 @@
 (function(window, document, $, undefined) {
         "use strict";
         $(function() {
-
-                if ($('#chartjs_line').length) {
-                    var ctx = document.getElementById('chartjs_line').getContext('2d');
-
-                    var myChart = new Chart(ctx, {
-                            type: 'line',
-
-                            data: {
-                                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-                                datasets: [{
-                                    label: 'Almonds',
-                                    data: [12, 19, 3, 17, 6, 3, 7],
-
-                                    backgroundColor: "rgba(89, 105, 255,0.5)",
-                                    borderColor: "rgba(89, 105, 255,0.7)",
-                                    borderWidth: 2
-                                }, {
-                                    label: 'Cashew',
-                                    data: [2, 29, 5, 5, 2, 3, 10],
-                                    backgroundColor: "rgba(255, 64, 123,0.5)",
-                                    borderColor: "rgba(255, 64, 123,0.7)",
-                                    borderWidth: 2
-                                }]
-
-                            },
-                            options: {
-                                legend: {
-                                    display: true,
-                                    position: 'bottom',
-
-                                    labels: {
-                                        fontColor: '#71748d',
-                                        fontFamily: 'Circular Std Book',
-                                        fontSize: 14,
-                                    }
-                                },
-
-                                scales: {
-                                    xAxes: [{
-                                        ticks: {
-                                            fontSize: 14,
-                                            fontFamily: 'Circular Std Book',
-                                            fontColor: '#71748d',
-                                        }
-                                    }],
-                                    yAxes: [{
-                                        ticks: {
-                                            fontSize: 14,
-                                            fontFamily: 'Circular Std Book',
-                                            fontColor: '#71748d',
-                                        }
-                                    }]
-                                }
-                            }
-                        
-
-
-                    });
-            }
-
-
-            if ($('#chartjs_bar').length) {
-                var ctx = document.getElementById("chartjs_bar").getContext('2d');
+            if ($('#chartjs_bar1').length) {
+                var ctx = document.getElementById("chartjs_bar1").getContext('2d');
                 var myChart = new Chart(ctx, {
                     type: 'bar',
                     data: {
-                        labels: ["M", "T", "W", "R", "F", "S", "S"],
+                        labels: JS_DATE_LIST,
                         datasets: [{
-                            label: 'Almonds',
-                            data: [12, 19, 3, 17, 28, 24, 7],
+                            label: 'ROA(총자산순이익률)',
+                            data: JS_ROA_LIST,
                            backgroundColor: "rgba(89, 105, 255,0.5)",
                                     borderColor: "rgba(89, 105, 255,0.7)",
                             borderWidth: 2
                         }, {
-                            label: 'Cashew',
-                            data: [30, 29, 5, 5, 20, 3, 10],
+                            label: '매출액총이익률',
+                            data: JS_PROFIT_LIST,
                            backgroundColor: "rgba(255, 64, 123,0.5)",
                                     borderColor: "rgba(255, 64, 123,0.7)",
+                            borderWidth: 2
+                        },
+                        {
+                            label: '영업이익률',
+                            data: JS_OPER_LIST,
+                           backgroundColor: "rgba(113, 204, 88,0.5)",
+                                    borderColor: "rgba(113, 170, 88,0.7)",
                             borderWidth: 2
                         }]
                     },
@@ -116,33 +62,99 @@
                         }]
                     }
                 }
-
-                    
                 });
             }
+             if ($('#chartjs_bar2').length) {
+                var ctx = document.getElementById("chartjs_bar2").getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: JS_DATE_LIST,
+                        datasets: [{
+                            label: '유동비율',
+                            data: JS_CUR_LIST,
+                           backgroundColor: "rgba(89, 105, 255,0.5)",
+                                    borderColor: "rgba(89, 105, 255,0.7)",
+                            borderWidth: 2
+                        }, {
+                            label: '부채비율',
+                            data: JS_DEBT_LIST,
+                           backgroundColor: "rgba(255, 64, 123,0.5)",
+                                    borderColor: "rgba(255, 64, 123,0.7)",
+                            borderWidth: 2
+                        },
+                        {
+                            label: '자기자본비율',
+                            data: JS_FIN_LIST,
+                           backgroundColor: "rgba(113, 204, 88,0.5)",
+                                    borderColor: "rgba(113, 170, 88,0.7)",
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            yAxes: [{
 
-            if ($('#chartjs_radar').length) {
+                            }]
+                        },
+                             legend: {
+                        display: true,
+                        position: 'bottom',
+
+                        labels: {
+                            fontColor: '#71748d',
+                            fontFamily: 'Circular Std Book',
+                            fontSize: 14,
+                        }
+                    },
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                fontSize: 14,
+                                fontFamily: 'Circular Std Book',
+                                fontColor: '#71748d',
+                            }
+                        }],
+                        yAxes: [{
+                            ticks: {
+                                fontSize: 14,
+                                fontFamily: 'Circular Std Book',
+                                fontColor: '#71748d',
+                            }
+                        }]
+                    }
+                }
+                });
+             }
+
+             if ($('#chartjs_radar').length) {
                 var ctx = document.getElementById("chartjs_radar");
                 var myChart = new Chart(ctx, {
                     type: 'radar',
                     data: {
-                        labels: ["M", "T", "W", "T", "F", "S", "S"],
+                        labels: ["영업이익률", "ROE", "매출액총이익률"],
                         datasets: [{
-                            label: 'Almonds',
-                           backgroundColor: "rgba(89, 105, 255,0.5)",
-                                    borderColor: "rgba(89, 105, 255,0.7)",
-                            data: [12, 19, 3, 17, 28, 24, 7],
+                            label: JS_NAME,
+                           backgroundColor: "rgba(76,175,80,0.5)",
+                                    borderColor: "rgba(76,175,80,0.7)",
+                            data: JS_G_RADAR_LIST,
                             borderWidth: 2
                         }, {
-                            label: 'Cashew',
-                             backgroundColor: "rgba(255, 64, 123,0.5)",
-                                    borderColor: "rgba(255, 64, 123,0.7)",
-                            data: [30, 29, 5, 5, 20, 3, 10],
+                            label: '양호',
+                             backgroundColor: "rgba(3,169,244,0.5)",
+                                    borderColor: "rgba(3,169,244,0.7)",
+                            data: G_GOOD,
+                            borderWidth: 2
+                        }, {
+                            label: '위험',
+                           backgroundColor: "rgba(244,67,54,0.5)",
+                                    borderColor: "rgba(244,67,54,0.7)",
+                            data: G_BAD,
                             borderWidth: 2
                         }]
                     },
                     options: {
-                       
+
                              legend: {
                         display: true,
                         position: 'bottom',
@@ -154,105 +166,36 @@
                         }
                     },
 
-                    
+
                 }
 
                 });
-            }
+             }
 
-
-            if ($('#chartjs_polar').length) {
-                var ctx = document.getElementById("chartjs_polar").getContext('2d');
+             if ($('#chartjs_radar2').length) {
+                var ctx = document.getElementById("chartjs_radar2");
                 var myChart = new Chart(ctx, {
-                    type: 'polarArea',
+                    type: 'radar',
                     data: {
-                        labels: ["M", "T", "W", "T", "F", "S", "S"],
+                        labels: ["유동비율", "부채비율", "자기자본비율","당좌비율"],
                         datasets: [{
-                            backgroundColor: [
-                                "#5969ff",
-                                "#ff407b",
-                                "#25d5f2",
-                                "#ffc750",
-                                "#2ec551",
-                                "#7040fa",
-                                "#ff004e"
-                            ],
-                            data: [12, 19, 3, 17, 28, 24, 7]
-                        }]
-                    },
-                    options: {
-                        
-                             legend: {
-                        display: true,
-                        position: 'bottom',
-
-                        labels: {
-                            fontColor: '#71748d',
-                            fontFamily: 'Circular Std Book',
-                            fontSize: 14,
-                        }
-                    },
-
-                    
-                }
-                });
-            }
-
-
-            if ($('#chartjs_pie').length) {
-                var ctx = document.getElementById("chartjs_pie").getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: ["M", "T", "W", "T", "F", "S", "S"],
-                        datasets: [{
-                            backgroundColor: [
-                               "#5969ff",
-                                "#ff407b",
-                                "#25d5f2",
-                                "#ffc750",
-                                "#2ec551",
-                                "#7040fa",
-                                "#ff004e"
-                            ],
-                            data: [12, 19, 3, 17, 28, 24, 7]
-                        }]
-                    },
-                    options: {
-                           legend: {
-                        display: true,
-                        position: 'bottom',
-
-                        labels: {
-                            fontColor: '#71748d',
-                            fontFamily: 'Circular Std Book',
-                            fontSize: 14,
-                        }
-                    },
-
-                    
-                }
-                });
-            }
-
-
-            if ($('#chartjs_doughnut').length) {
-                var ctx = document.getElementById("chartjs_doughnut").getContext('2d');
-                var myChart = new Chart(ctx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ["M", "T", "W", "T", "F", "S", "S"],
-                        datasets: [{
-                            backgroundColor: [
-                                 "#5969ff",
-                                "#ff407b",
-                                "#25d5f2",
-                                "#ffc750",
-                                "#2ec551",
-                                "#7040fa",
-                                "#ff004e"
-                            ],
-                            data: [12, 19, 3, 17, 28, 24, 7]
+                            label: JS_NAME,
+                           backgroundColor: "rgba(76,175,80,0.5)",
+                                    borderColor: "rgba(76,175,80,0.7)",
+                            data: JS_S_RADAR_LIST,
+                            borderWidth: 2
+                        }, {
+                            label: '양호',
+                             backgroundColor: "rgba(3,169,244,0.5)",
+                                    borderColor: "rgba(3,169,244,0.7)",
+                            data: S_GOOD,
+                            borderWidth: 2
+                        }, {
+                            label: '위험',
+                           backgroundColor: "rgba(244,67,54,0.5)",
+                                    borderColor: "rgba(244,67,54,0.7)",
+                            data: S_BAD,
+                            borderWidth: 2
                         }]
                     },
                     options: {
@@ -268,13 +211,11 @@
                         }
                     },
 
-                    
+
                 }
 
                 });
+
             }
-
-
         });
-
 })(window, document, window.jQuery);

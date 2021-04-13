@@ -1943,7 +1943,9 @@ Container / Wrapper
 .dashboard-wrapper {
     position: relative;
     left: 0;
-    margin-left: 264px;
+    margin-top: 20px;
+    margin-left: 150px;
+    margin-right: 150px;
     min-height: 870px !important;
 }
 
@@ -2043,6 +2045,7 @@ Pageheader
 .pageheader-title {
     font-size: 24px;
     margin-bottom: 8px;
+    margin:0 auto
 }
 
 .pageheader-text {
@@ -3063,7 +3066,7 @@ clip-path: polygon(10% 25%, 10% 0, 35% 0%, 65% 0%, 90% 0, 90% 25%, 90% 50%, 91% 
 
 .btn-outline-light {
     color: #7171a6;
-    background-color: transparent;
+    background-color: #fefefe;
     border-color: #e6e6f2;
 }
 
@@ -3210,6 +3213,7 @@ btn-link
     box-shadow: 0px 1px 2px 1px rgba(154, 154, 204, 0.22);
 }
 
+
 .card-header {
     background-color: #fff;
     border-bottom: 1px solid #e6e6f2;
@@ -3222,6 +3226,11 @@ btn-link
 }
 
 .card-body {}
+
+.box_chart {
+    width: 800px;
+    margin: 0 auto;
+}
 
 .card-text {}
 
@@ -3237,7 +3246,7 @@ btn-link
 }
 
 .card-header-title {
-    margin: 0;
+    margin: 0 auto;
     line-height: 2;
 }
 
